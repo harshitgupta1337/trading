@@ -4,20 +4,18 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import datetime
+import argparse
+from os.path import join
 
-now = datetime.datetime.now()
-start_day = now + datetime.timedelta(days=-600)
-next_day = now + datetime.timedelta(days=1)
-start_date = datetime.date.strftime(start_day, '%Y-%m-%d')
-end_date = datetime.date.strftime(next_day, '%Y-%m-%d')
-
-# Set the ticker
-TICKERS = ["HLT"]
-#TICKERS = ["F", "GOOGL", "GOOG", "NFLX", "KO"]
-#TICKERS = ["FDX", "SBUX", "DT", "FDX", "UPS", "XLNX", "AMZN", "AMD",  "INTC", "PYPL", 'NET', "GSAT", "NVDA", "OCGN", "GE", "GM"]
-
-plt.minorticks_on()
-for ticker in TICKERS:
+def main(ticker, lookbehind_days, outdir):
+    now = datetime.datetime.now()
+    start_day = now + datetime.timedelta(days=-1*lookbehind_days)
+    next_day = now + datetime.timedelta(days=1)
+    start_date = datetime.date.strftime(start_day, '%Y-%m-%d')
+    end_date = datetime.date.strftime(next_day, '%Y-%m-%d')
+    
+    plt.close()
+    plt.minorticks_on()
     # Get the data
     data = yf.download(ticker, start_date, end_date)
     df = data
@@ -69,4 +67,12 @@ for ticker in TICKERS:
     ax.grid()
     ax.legend()
     ax.set_title(ticker, fontsize=20)
-    fig.savefig("%s.png"%ticker, bbox_inches="tight")	
+    fig.savefig(join(outdir, "%s.png"%ticker), bbox_inches="tight")	
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--look-behind", dest="look_behind", type=int, help="Number of days to look behind", default=600)
+    parser.add_argument("-T", dest="ticker", required=True, help="Ticker")
+    parser.add_argument("-O", dest="outdir", required=True, help="Outdir")
+    args = parser.parse_args()
+    main(args.ticker, args.look_behind, args.outdir)
