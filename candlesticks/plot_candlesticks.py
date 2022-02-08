@@ -3,10 +3,14 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import datetime
 
-# Set the start and end date
-start_date = '2020-01-01'
-end_date = '2022-02-09'
+now = datetime.datetime.now()
+start_day = now + datetime.timedelta(days=-600)
+next_day = now + datetime.timedelta(days=1)
+start_date = datetime.date.strftime(start_day, '%Y-%m-%d')
+end_date = datetime.date.strftime(next_day, '%Y-%m-%d')
+
 # Set the ticker
 TICKERS = ["HLT"]
 #TICKERS = ["F", "GOOGL", "GOOG", "NFLX", "KO"]
@@ -16,10 +20,9 @@ plt.minorticks_on()
 for ticker in TICKERS:
     # Get the data
     data = yf.download(ticker, start_date, end_date)
-    
-    # Print 5 rows
     df = data
     df.to_csv("data/%s.csv"%ticker)
+    df = pd.read_csv("data/%s.csv"%ticker)
     
     long_rolling = df["Adj Close"].rolling(window=100).mean()
     short_rolling = df["Adj Close"].rolling(window=20).mean()
@@ -29,7 +32,7 @@ for ticker in TICKERS:
    
     candidate_xticks = []
     for idx, row in df.iterrows():
-        candidate_xticks.append((idx, row.Date))
+        candidate_xticks.append((idx, str(row["Date"])))
     idx = len(candidate_xticks)-1
     xticks = []
     while idx >= 0:
