@@ -17,11 +17,12 @@ def main(ticker, lookbehind_days, outdir):
     plt.close()
     plt.minorticks_on()
     # Get the data
+    print ("Download started")
     data = yf.download(ticker, start_date, end_date)
     df = data
     df.to_csv("data/%s.csv"%ticker)
     df = pd.read_csv("data/%s.csv"%ticker)
-    
+    print ("Download ended")
     long_rolling = df["Adj Close"].rolling(window=100).mean()
     short_rolling = df["Adj Close"].rolling(window=20).mean()
     
