@@ -9,6 +9,7 @@ DIS
 DT
 ETSY
 F
+FSLR
 FDX
 GE
 GM
@@ -37,3 +38,5 @@ SQ
 TXN
 UPS
 XLNX
+BRD
+TCRX
