@@ -2,12 +2,13 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source $SCRIPT_DIR/../venv/bin/activate
 
-mkdir -p ./plots
-mkdir -p ./data
-
 BATCH_SIZE=8
 tickers_file=$1
+category=$(basename $tickers_file)
 ALL_TICKERS=$(cat $tickers_file)
+
+mkdir -p ./plots/tickers/$category
+mkdir -p ./data
 
 # Converting the NUM_TICKERS multi-line string into an array
 SAVEIFS=$IFS   # Save current IFS (Internal Field Separator)
@@ -34,7 +35,7 @@ do
     for ticker in $batch
     do
         echo "Launching plotting for ticker $ticker"
-        python3 $SCRIPT_DIR/plot_candlesticks.py -O ./plots/ -T $ticker > /dev/null &
+        python3 $SCRIPT_DIR/plot_candlesticks.py -O ./plots/tickers/$category -T $ticker > /dev/null &
         pids="$pids $!"
     done
     for pid in $pids

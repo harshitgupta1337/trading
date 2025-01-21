@@ -1,2 +1,5 @@
 #!/bin/bash
-convert ./plots/*.png ./plots/merged.pdf
+
+category=$1
+
+convert ./plots/tickers/$category/*.png ./plots/categories/$category.pdf
