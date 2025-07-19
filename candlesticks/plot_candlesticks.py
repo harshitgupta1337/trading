@@ -23,8 +23,15 @@ def main(ticker, lookbehind_days, outdir):
     df.to_csv("data/%s.csv"%ticker)
     df = pd.read_csv("data/%s.csv"%ticker)
     print ("Download ended")
-    long_rolling = df["Adj Close"].rolling(window=100).mean()
-    short_rolling = df["Adj Close"].rolling(window=20).mean()
+
+    df = df.iloc[2:]
+    df = df.rename(columns={"Price": "Date"})
+
+    for col in ["Open", "Close", "High", "Low"]:
+        df[col] = df[col].astype(float)
+
+    long_rolling = df["Close"].rolling(window=100).mean()
+    short_rolling = df["Close"].rolling(window=20).mean()
     
     plt.close()
     fig, ax = plt.subplots(figsize=(32,8))
