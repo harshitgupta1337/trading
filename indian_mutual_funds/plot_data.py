@@ -16,6 +16,8 @@ def plot_file(filepath, plot_dir, filename):
     df = df.sort_values('date').reset_index(drop=True)
     df.plot(x='date', y='nav', title=filename[:-4], ax=ax)
     plot_filepath = os.path.join(plot_dir, f"{filename[:-4]}.png")
+    # set gridlines in the plot
+    ax.grid(True)
     fig.savefig(plot_filepath)
     print(f"Saved plot for {filename} to {plot_filepath}")
 
