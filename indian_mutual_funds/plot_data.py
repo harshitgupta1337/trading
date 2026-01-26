@@ -11,9 +11,9 @@ def plot_file(filepath, plot_dir, scheme_code, scheme_name):
     # Instead of using plt use figure to avoid conflicts in threads
     fig, ax = plt.subplots()
     df = pd.read_csv(filepath)
-    df['nav'] = df['nav'].astype(float)
-    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
-    df = df.sort_values('date').reset_index(drop=True)
+    #df['nav'] = df['nav'].astype(float)
+    #df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
+    #df = df.sort_values('date').reset_index(drop=True)
     df.plot(x='date', y='nav', title=scheme_name, ax=ax)
     plot_filepath = os.path.join(plot_dir, f"{scheme_code}.png")
     # set gridlines in the plot
@@ -35,34 +35,13 @@ def main(data_dir, plot_dir, scheme_mapping_file):
     import os
     os.makedirs(plot_dir, exist_ok=True)
 
-    threads = []
     for filename in os.listdir(data_dir):
         if filename.endswith(".csv"):
 
             # create a thread for plotting each file
             scheme_code = filename.replace(".csv", "")
             scheme_name = scheme_mappings.get(scheme_code, "Unknown Scheme")
-            thread = threading.Thread(target=plot_file, args=(os.path.join(data_dir, filename), plot_dir, scheme_code, scheme_name))
-            threads.append(thread)
-            thread.start()
-
-    for thread in threads:
-        thread.join()
-
-  #df = mf.get_scheme_historical_nav(mutual_fund_code, as_Dataframe=True).reset_index()
-  #df.to_csv("/tmp/mf.csv", index=False)
-
-  # df = pd.read_csv("/tmp/mf.csv")
-
-  # df['nav'] = df['nav'].astype(float)
-  # df['date'] = pd.to_datetime(df['date'], format='%d-%m-%Y')
-  # startDate = dt.datetime(2023, 1,  1)
-  # df = df[df['date'] > startDate]
-  
-  # df = df.sort_values('date').reset_index(drop=True)
-  # df.plot(x='date', y='nav')
-  # plt.title("mutual_fund")
-  # plt.savefig("mf.png")
+            plot_file(os.path.join(data_dir, filename), plot_dir, scheme_code, scheme_name)
 
 if __name__ == "__main__":
   # Use argparse to handle command-line args
