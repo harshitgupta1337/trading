@@ -6,6 +6,7 @@ cd $SCRIPT_DIR
 
 # Step 1: Fetch scheme codes
 $SCRIPT_DIR/fetch_scheme_codes.sh
+echo "Downloaded scheme codes"
 
 for days in 180 365 730 1825; do
     # Step 2: Pull data

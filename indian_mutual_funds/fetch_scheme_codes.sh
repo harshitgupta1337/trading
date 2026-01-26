@@ -8,9 +8,3 @@ if [ ! -f NAVAll.TXT ]; then
         exit 1
     fi
 fi
-
-# Filter only those lines that contain scheme codes (assuming scheme codes are numeric and 6 digits long)
-
-# regular expression for integers separated by semicolon
-regexp='^[0-9]*;'
-cat NAVAll.TXT | grep -E $regexp
